@@ -1,6 +1,5 @@
 package ph.edu.dlsu.fx.utils;
 
-import javafx.collections.ObservableList;
 import javafx.stage.Screen;
 
 /**
@@ -8,21 +7,11 @@ import javafx.stage.Screen;
  */
 public class ScreenSize {
 
-    private double displayWidth;
-    private double displayHeight;
-
-    public ScreenSize() {
-        ObservableList<Screen> screenList = Screen.getScreens();
-        displayWidth = screenList.get(0).getBounds().getWidth();
-        displayHeight = screenList.get(0).getBounds().getHeight();
+    public static double getDisplayWidth() {
+        return Screen.getScreens().get(0).getBounds().getWidth();
     }
 
-
-    public double getDisplayWidth() {
-        return displayWidth;
-    }
-
-    public double getDisplayHeight() {
-        return displayHeight;
+    public static double getDisplayHeight() {
+        return Screen.getScreens().get(0).getBounds().getHeight();
     }
 }

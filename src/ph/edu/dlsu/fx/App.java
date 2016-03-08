@@ -8,6 +8,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.opencv.core.Core;
+import ph.edu.dlsu.fx.ui.CustomMenuItem;
+import ph.edu.dlsu.fx.ui.MenuTitle;
+import ph.edu.dlsu.fx.ui.MenuVBox;
 import ph.edu.dlsu.fx.utils.ConfirmationBox;
 import ph.edu.dlsu.fx.utils.ScreenSize;
 import ph.edu.dlsu.fx.utils.Utils;
@@ -43,9 +46,8 @@ public class App extends Application {
     }
 
     private void initializeScreenSize() {
-        ScreenSize screen = new ScreenSize();
-        displayWidth = screen.getDisplayWidth();
-        displayHeight = screen.getDisplayHeight();
+        displayWidth = ScreenSize.getDisplayWidth();
+        displayHeight = ScreenSize.getDisplayHeight();
     }
 
 
@@ -80,20 +82,21 @@ public class App extends Application {
         // final CustomMenuItem login = new CustomMenuItem("LOGIN");
         final CustomMenuItem start = new CustomMenuItem("START");
         final CustomMenuItem training = new CustomMenuItem("TRAINING");
-        final CustomMenuItem browse = new CustomMenuItem("FACTS");
+        final CustomMenuItem facts = new CustomMenuItem("FACTS");
         final CustomMenuItem help = new CustomMenuItem("HELP");
         final CustomMenuItem about = new CustomMenuItem("ABOUT");
         final CustomMenuItem exit = new CustomMenuItem("EXIT");
 
         // handle menu events
         start.setOnMouseClicked(e -> onStart());
+        facts.setOnMouseClicked(e -> onFacts());
         training.setOnMouseClicked(e -> onTraining());
         exit.setOnMouseClicked(e -> onExit());
 
         menuBox = new MenuVBox(
                 start,
                 training,
-                browse,
+                facts,
                 help,
                 about,
                 exit);
@@ -110,16 +113,24 @@ public class App extends Application {
 
     // START Menu
     public static void onStart() {
-        StartBSE startBSE = new StartBSE();
+        StartScene startScene = new StartScene();
         stage.setTitle("START SCENE");
-        stage.setScene(new Scene(startBSE.createStartContent(), displayWidth, displayHeight));
+        stage.setScene(new Scene(startScene.createContent(), displayWidth, displayHeight));
     }
 
     // TRAINING Menu
     public static void onTraining() {
-        Training training = new Training();
+        TrainingScene trainingScene = new TrainingScene();
         stage.setTitle("TRAINING SCENE");
-        stage.setScene(new Scene(training.createStartContent(), displayWidth, displayHeight));
+        stage.setScene(new Scene(trainingScene.createContent(), displayWidth, displayHeight));
+    }
+
+
+    // FACTS Menu
+    public static void onFacts() {
+        FactsScene factScene = new FactsScene();
+        stage.setTitle("FACTS SCENE");
+        stage.setScene(new Scene(factScene.createContent(), displayWidth, displayHeight));
     }
 
     // EXIT Menu

@@ -1,17 +1,17 @@
-package ph.edu.dlsu.fx;
+package ph.edu.dlsu.fx.ui;
 
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 /**
  * Created by cobalt on 3/6/16.
  */
-public class MenuVBox extends VBox {
+public class MenuHBox extends HBox {
 
 
 
-    public MenuVBox(CustomMenuItem... items) {
+    public MenuHBox(CustomMenuItem... items) {
         getChildren().add(createSeparator());
 
         for (CustomMenuItem item : items) {
@@ -21,7 +21,7 @@ public class MenuVBox extends VBox {
 
     private Line createSeparator() {
         Line sep = new Line();
-        sep.setEndX(240);
+        sep.setEndY(40);
         sep.setStroke(Color.DARKGREY);
         return sep;
     }

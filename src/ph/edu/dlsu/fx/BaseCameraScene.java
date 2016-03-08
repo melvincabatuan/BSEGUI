@@ -5,6 +5,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
+import ph.edu.dlsu.fx.ui.MenuHBox;
+import ph.edu.dlsu.fx.utils.ScreenSize;
 import ph.edu.dlsu.fx.utils.Utils;
 
 import java.util.concurrent.Executors;
@@ -19,12 +21,12 @@ public abstract class BaseCameraScene {
     MenuHBox menuBox;
 
     // Window size
-    double displayWidth;
-    double displayHeight;
+    double displayWidth = ScreenSize.getDisplayWidth();
+    double displayHeight = ScreenSize.getDisplayHeight();
 
     // Frame size
-    double frameWidth;
-    double frameHeight;
+    double frameWidth = 0.8 * displayWidth;
+    double frameHeight = displayHeight;
 
     // Menu size
     final double menuWidth = 220;
@@ -41,7 +43,7 @@ public abstract class BaseCameraScene {
 
 
     // create content for the Main Menu scene
-    public abstract Parent createStartContent();
+    public abstract Parent createContent();
 
     // create top menu
     public abstract void createHMenu();

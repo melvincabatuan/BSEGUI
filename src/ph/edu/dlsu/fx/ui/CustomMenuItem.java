@@ -1,4 +1,4 @@
-package ph.edu.dlsu.fx;
+package ph.edu.dlsu.fx.ui;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
