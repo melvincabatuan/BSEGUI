@@ -82,7 +82,9 @@ public abstract class BaseCameraScene {
         }
 
         // release the camera
-        this.capture.release();
+        if (capture != null) {
+            this.capture.release();
+        }
         // clean the frame
         if (currentFrame != null) {
             this.currentFrame.setImage(null);

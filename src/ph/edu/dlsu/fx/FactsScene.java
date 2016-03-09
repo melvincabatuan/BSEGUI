@@ -98,4 +98,10 @@ public class FactsScene extends BaseCameraScene {
     public void onCameraFrame(Mat frame) {
         contours.apply(frame, frame);
     }
+
+    @Override
+    public void stopCamera(){
+        contours.release();
+        super.stopCamera();
+    }
 }

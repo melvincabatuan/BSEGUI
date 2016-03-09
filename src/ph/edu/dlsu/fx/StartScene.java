@@ -3,10 +3,14 @@ package ph.edu.dlsu.fx;
 import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
 import ph.edu.dlsu.fx.ui.CustomMenuItem;
 import ph.edu.dlsu.fx.ui.MenuHBox;
 import ph.edu.dlsu.fx.utils.Utils;
+import ph.edu.dlsu.fx.vision.ConsensusMatchingTracker;
 import ph.edu.dlsu.fx.vision.ObjectDetector;
 
 /**
@@ -17,9 +21,27 @@ public class StartScene extends BaseCameraScene {
     // cascade classifier
     private ObjectDetector faceDetector = new ObjectDetector();
 
+    // tracker
+    private ConsensusMatchingTracker cmt;
+    private boolean isCmtInitialized;
+    private Rect trackingRoi;
+
+    // input
+    private Mat mGray;
+
+    private int initCounter;
+
 
     // Create content for the Main Menu scene
     public Parent createContent() {
+
+        // Create the tracker
+        cmt = new ConsensusMatchingTracker();
+        isCmtInitialized = false;
+        initCounter = 0;
+
+        // Initialize gray image
+        mGray = new Mat((int)frameHeight, (int)frameWidth, CvType.CV_8UC1);
 
         // Create Main Menu pane
         Pane rootNode = new Pane();
@@ -92,6 +114,41 @@ public class StartScene extends BaseCameraScene {
 
     @Override
     public void onCameraFrame(Mat frame) {
+        // get the gray image
+        Imgproc.cvtColor(frame, mGray, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.equalizeHist(mGray, mGray);
         faceDetector.detectAndDisplay(frame);
+        trackingRoi = faceDetector.getObjectRoi();
+        if (!isCmtInitialized && trackingRoi != null) {
+            initializeTracker();
+        }
+        else {
+            cmt.apply(mGray, frame);
+            initCounter++;
+            // reinitialize every 5 frames
+            if (initCounter > 5){
+                // reinitialize tracker if far from object detector roi
+                initializeTracker();
+                initCounter = 0;
+            }
+        }
+    }
+
+    private void initializeTracker(){
+        cmt.initialize(mGray,
+                (long) (trackingRoi.x),
+                (long) (trackingRoi.y),
+                (long) (trackingRoi.width),
+                (long) (trackingRoi.height));
+        isCmtInitialized = true;
+    }
+
+    @Override
+    public void stopCamera(){
+        mGray.release();
+        cmt.release();
+        trackingRoi = null;
+        isCmtInitialized = false;
+        super.stopCamera();
     }
 }

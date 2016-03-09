@@ -15,9 +15,9 @@ import org.opencv.objdetect.Objdetect;
 public class ObjectDetector {
 
     private static final String cascadePath = "res/haarcascades/haarcascade_frontalface_alt.xml";
-
     private CascadeClassifier classifier;
     private int absoluteFaceSize;
+    private Rect objectRoi = null;
 
     public ObjectDetector() {
         this.classifier = new CascadeClassifier();
@@ -42,14 +42,24 @@ public class ObjectDetector {
             }
         }
 
-        // detect faces
+        // detect objects
         this.classifier.detectMultiScale(grayFrame, faces, 1.1, 2, Objdetect.CASCADE_SCALE_IMAGE,
                 new Size(this.absoluteFaceSize, this.absoluteFaceSize), new Size());
 
         // each rectangle in faces is a face: draw them!
-        Rect[] facesArray = faces.toArray();
-        for (int i = 0; i < facesArray.length; i++)
-            Imgproc.rectangle(frame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0), 3);
+        Rect[] objectsArray = faces.toArray();
+        for (int i = 0; i < objectsArray.length; i++) {
+            Imgproc.rectangle(frame, objectsArray[i].tl(), objectsArray[i].br(), new Scalar(0, 255, 0), 3);
+        }
 
+        // track the first face
+        if(objectsArray.length != 0) {
+            objectRoi = objectsArray[0];
+        }
+
+    }
+
+    public Rect getObjectRoi(){
+        return objectRoi;
     }
 }

@@ -6,7 +6,7 @@ import ph.edu.dlsu.fx.vision.interfaces.NativeAlgorithm;
 /**
  * Created by cobalt on 3/8/16.
  */
-public class RecolorRC implements NativeAlgorithm {
+public final class RecolorRC implements NativeAlgorithm {
 
     static {
         // Load the native library if it is not already loaded.

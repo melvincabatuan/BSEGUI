@@ -9,9 +9,12 @@
 /* Mixers (Filter)*/
 #include "RecolorRC.h"
 
-
 /* Contours */
 #include "Contours.h"
+
+/* CMT Tracker */
+#include "ConsensusMatchingTracker.h"
+
 
 using namespace mhealth;
 
@@ -19,6 +22,62 @@ using namespace mhealth;
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+/****************************** Consensus-based Matching Tracker ******************************/
+
+JNIEXPORT jlong JNICALL
+Java_ph_edu_dlsu_fx_vision_ConsensusMatchingTracker_nativeCreateObject(JNIEnv *env,
+                                                                            jclass type){
+    ConsensusMatchingTracker *self = new ConsensusMatchingTracker();
+    return (jlong) self;
+
+}
+
+JNIEXPORT void JNICALL
+Java_ph_edu_dlsu_fx_vision_ConsensusMatchingTracker_nativeDestroyObject(JNIEnv *env,
+                                                                             jclass type,
+                                                                             jlong thiz) {
+
+    if (thiz != 0) {
+        ConsensusMatchingTracker *self = (ConsensusMatchingTracker *) thiz;
+        delete self;
+    }
+
+}
+
+JNIEXPORT void JNICALL
+Java_ph_edu_dlsu_fx_vision_ConsensusMatchingTracker_initialize(JNIEnv *env,
+                                                                            jclass type, jlong thiz,
+                                                                            jlong srcAddr,
+                                                                            jlong xTopLeft,
+                                                                            jlong yTopLeft,
+                                                                            jlong width,
+                                                                            jlong height) {
+
+    ConsensusMatchingTracker *self = (ConsensusMatchingTracker *) thiz;
+    cv::Mat& im_gray  = *(cv::Mat*)srcAddr;
+    self->initialize(im_gray, xTopLeft, yTopLeft, width, height);
+
+}
+
+JNIEXPORT void JNICALL
+Java_ph_edu_dlsu_fx_vision_ConsensusMatchingTracker_apply(JNIEnv *env, jclass type,
+                                                                    jlong thiz, jlong srcAddr,
+                                                                    jlong dstAddr) {
+
+    ConsensusMatchingTracker *self = (ConsensusMatchingTracker *) thiz;
+
+    if (!(self->isInitialized()))
+        return;
+
+    cv::Mat& im_gray  = *(cv::Mat*)srcAddr;
+    cv::Mat& im_rgba  = *(cv::Mat*)dstAddr;
+
+    self->processFrame(im_gray, im_rgba);
+
+}
+
 
 
 /****************************** RecolorRC ******************************/
